@@ -18,4 +18,9 @@ path = "src/bin/aoc/day2.rs"
 name = "day3"
 path = "src/bin/aoc/day3.rs"
 
+[[bin]]
+name = "day4"
+path = "src/bin/aoc/day4.rs"
+
 [dependencies]
+regex = "1"
