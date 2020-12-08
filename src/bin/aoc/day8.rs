@@ -20,35 +20,7 @@ pub fn part_one() {
         instructions.push(hashmap);
     }
 
-    let mut index: i32 = 0;
-    let mut accumulator = 0;
-    let mut instructions_handled: Vec<i32> = Vec::new();
-
-    while index < instructions.len() as i32 {
-
-        if instructions_handled.contains(&(index as i32)) {
-            break;
-        }
-
-        let instruction: &HashMap<String, i32> = &instructions[index as usize];
-
-        let opcodes: Vec<&String> = instruction.keys().collect();
-        let opcode = opcodes[0];
-        let arg = instruction.get(opcode).unwrap();
-
-        instructions_handled.push(index as i32);
-
-        if opcode == "nop" {
-            index += 1;
-        } else if opcode == "acc" {
-            accumulator += arg;
-            index += 1;
-        } else if opcode == "jmp" {
-            index += *arg;
-        }
-    }
-
-    println!("Part One: {}", accumulator)
+    println!("Part One: {}", run_instructions(instructions, true))
 
 }
 
@@ -87,7 +59,7 @@ pub fn part_two() {
             continue
         }
 
-        let run_result = run_instructions(instruction_copy);
+        let run_result = run_instructions(instruction_copy, false);
 
         if run_result != 0 {
             final_acc = run_result;
@@ -99,7 +71,7 @@ pub fn part_two() {
 
 }
 
-fn run_instructions(instructions: Vec<HashMap<String, i32>>) -> i32 {
+fn run_instructions(instructions: Vec<HashMap<String, i32>>, fuck_infinite: bool) -> i32 {
 
     let mut index: i32 = 0;
     let mut accumulator = 0;
@@ -108,7 +80,9 @@ fn run_instructions(instructions: Vec<HashMap<String, i32>>) -> i32 {
     while index < instructions.len() as i32 {
 
         if instructions_handled.contains(&(index as i32)) {
-            accumulator = 0;
+            if !fuck_infinite {
+                accumulator = 0;
+            }
             break;
         }
 
