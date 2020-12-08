@@ -103,16 +103,11 @@ fn run_instructions(instructions: Vec<HashMap<String, i32>>) -> i32 {
 
     let mut index: i32 = 0;
     let mut accumulator = 0;
-
-    let mut iterations = 0;
+    let mut instructions_handled: Vec<i32> = Vec::new();
 
     while index < instructions.len() as i32 {
 
-        /* This is kinda dumb but works as there is no real way to know whether the loop is infinite otherwise
-        * My homie turing says this: Turing proved no algorithm exists that always correctly decides whether, for a given arbitrary program and input, the program halts when run with that input
-        * https://en.wikipedia.org/wiki/Halting_problem
-        */
-        if iterations > 1000 {
+        if instructions_handled.contains(&(index as i32)) {
             accumulator = 0;
             break;
         }
@@ -123,6 +118,8 @@ fn run_instructions(instructions: Vec<HashMap<String, i32>>) -> i32 {
         let opcode = opcodes[0];
         let arg = instruction.get(opcode).unwrap();
 
+        instructions_handled.push(index as i32);
+
         if opcode == "nop" {
             index += 1;
         } else if opcode == "acc" {
@@ -131,8 +128,6 @@ fn run_instructions(instructions: Vec<HashMap<String, i32>>) -> i32 {
         } else if opcode == "jmp" {
             index += *arg;
         }
-
-        iterations += 1;
     }
 
     return accumulator;
