@@ -8,7 +8,7 @@ fn main() {
 pub fn part_one() {
     let lines: Vec<String> = util::get_input_lines().collect();
 
-    let mut grid = vec!(vec![".".parse::<char>().unwrap(); lines[0].len()]; lines.len());
+    let mut grid = vec!(vec!['.'; lines[0].len()]; lines.len());
 
     for i in 0..lines.len() {
         let line = &lines[i];
@@ -36,7 +36,7 @@ pub fn part_one() {
 pub fn part_two() {
     let lines: Vec<String> = util::get_input_lines().collect();
 
-    let mut grid = vec!(vec![".".parse::<char>().unwrap(); lines[0].len()]; lines.len());
+    let mut grid = vec!(vec!['.'; lines[0].len()]; lines.len());
 
     for i in 0..lines.len() {
         let line = &lines[i];
@@ -92,7 +92,7 @@ fn run_round(input_seats: Vec<Vec<char>>) -> (Vec<Vec<char>>, u32) {
                         }
 
                         let seat_check = &seats[(y + i) as usize][(x + p) as usize];
-                        if *seat_check == "#".parse::<char>().unwrap() {
+                        if *seat_check == '#' {
                             next_to_occupied = true;
                         }
                     }
@@ -200,7 +200,7 @@ fn run_round_with_vision(input_seats: Vec<Vec<char>>) -> (Vec<Vec<char>>, u32) {
 }
 
 fn see_direction(seat: Coordinate, seats: Vec<Vec<char>>, x_offset: i64, y_offset: i64) -> char {
-    let mut spotted_char = ".".parse::<char>().unwrap();
+    let mut spotted_char = '.';
 
     let mut current_vision: Coordinate = seat;
 
@@ -223,7 +223,7 @@ fn count_occupied(seats: Vec<Vec<char>>) -> i32 {
     for y in 0..seats.len() {
         for x in 0..seats[y].len() {
             let seat = &seats[y][x];
-            if *seat == "#".parse::<char>().unwrap() {
+            if *seat == '#' {
                 count += 1;
             }
         }
