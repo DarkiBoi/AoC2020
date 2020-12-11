@@ -21,9 +21,9 @@ pub fn part_one() {
     let mut current_seats = grid;
 
     loop {
-        let new_seats = run_round((&current_seats).to_owned());
+        let (new_seats, changed) = run_round((&current_seats).to_owned());
 
-        if count_occupied((&new_seats).to_owned()) != count_occupied((&current_seats).to_owned()) {
+        if changed > 0 {
             current_seats = new_seats;
         } else {
             break;
@@ -47,16 +47,12 @@ pub fn part_two() {
     }
 
     let mut current_seats = grid;
-
     // This shit takes literally 3 minutes to compute, and idk how to optimize it xD
 
     loop {
-        let new_seats = run_round_with_vision((&current_seats).to_owned());
+        let (new_seats, changed) = run_round_with_vision((&current_seats).to_owned());
 
-        let occupied_new = count_occupied((&new_seats).to_owned());
-        let occupied_old = count_occupied((&current_seats).to_owned());
-
-        if occupied_new != occupied_old {
+        if changed > 0 {
             current_seats = new_seats;
         } else {
             break;
@@ -67,8 +63,10 @@ pub fn part_two() {
     println!("Part Two: {:?}", count_occupied(current_seats));
 }
 
-fn run_round(input_seats: Vec<Vec<char>>) -> Vec<Vec<char>> {
+fn run_round(input_seats: Vec<Vec<char>>) -> (Vec<Vec<char>>, u32) {
     let mut seats = input_seats;
+
+    let mut changed = 0u32;
 
     let mut seats_to_be_changed: Vec<Change> = Vec::new();
 
@@ -102,6 +100,7 @@ fn run_round(input_seats: Vec<Vec<char>>) -> Vec<Vec<char>> {
                 if !next_to_occupied {
                     let change = Change::new(x, y, "#".parse::<char>().unwrap());
                     seats_to_be_changed.push(change);
+                    changed += 1;
                 }
             } else if *seat == "#".parse::<char>().unwrap() {
                 let mut occupied_adjacents = 0;
@@ -128,6 +127,7 @@ fn run_round(input_seats: Vec<Vec<char>>) -> Vec<Vec<char>> {
                 if occupied_adjacents >= 4 {
                     let change = Change::new(x, y, "L".parse::<char>().unwrap());
                     seats_to_be_changed.push(change);
+                    changed += 1;
                 }
             }
         }
@@ -137,11 +137,13 @@ fn run_round(input_seats: Vec<Vec<char>>) -> Vec<Vec<char>> {
         seats[change.coordinate.y as usize][change.coordinate.x as usize] = change.char;
     }
 
-    return seats;
+    return (seats, changed);
 }
 
-fn run_round_with_vision(input_seats: Vec<Vec<char>>) -> Vec<Vec<char>> {
+fn run_round_with_vision(input_seats: Vec<Vec<char>>) -> (Vec<Vec<char>>, u32) {
     let mut seats = input_seats;
+
+    let mut changed = 0u32;
 
     let mut seats_to_be_changed: Vec<Change> = Vec::new();
 
@@ -166,6 +168,7 @@ fn run_round_with_vision(input_seats: Vec<Vec<char>>) -> Vec<Vec<char>> {
                 if !next_to_occupied {
                     let change = Change::new(x, y, "#".parse::<char>().unwrap());
                     seats_to_be_changed.push(change);
+                    changed += 1;
                 }
             } else if *seat == "#".parse::<char>().unwrap() {
                 let mut occupied_adjacents = 0;
@@ -183,6 +186,7 @@ fn run_round_with_vision(input_seats: Vec<Vec<char>>) -> Vec<Vec<char>> {
                 if occupied_adjacents >= 5 {
                     let change = Change::new(x, y, "L".parse::<char>().unwrap());
                     seats_to_be_changed.push(change);
+                    changed += 1;
                 }
             }
         }
@@ -192,7 +196,7 @@ fn run_round_with_vision(input_seats: Vec<Vec<char>>) -> Vec<Vec<char>> {
         seats[change.coordinate.y as usize][change.coordinate.x as usize] = change.char;
     }
 
-    return seats;
+    return (seats, changed);
 }
 
 fn see_direction(seat: Coordinate, seats: Vec<Vec<char>>, x_offset: i64, y_offset: i64) -> char {
