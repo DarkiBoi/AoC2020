@@ -1,5 +1,3 @@
-use std::io::BufRead;
-
 mod util;
 
 fn main() {
