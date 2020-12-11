@@ -73,9 +73,9 @@ fn run_round(input_seats: Vec<Vec<char>>) -> (Vec<Vec<char>>, u32) {
     for y in 0i64..seats.len() as i64 {
         for x in 0i64..seats[y as usize].len() as i64 {
             let seat = &seats[y as usize][x as usize];
-            if *seat == ".".parse::<char>().unwrap() {
+            if *seat == '.' {
                 continue;
-            } else if *seat == "L".parse::<char>().unwrap() {
+            } else if *seat == 'L' {
                 let mut next_to_occupied: bool = false;
                 for i in -1i64..=1 {
                     for p in -1i64..=1 {
@@ -98,11 +98,11 @@ fn run_round(input_seats: Vec<Vec<char>>) -> (Vec<Vec<char>>, u32) {
                     }
                 }
                 if !next_to_occupied {
-                    let change = Change::new(x, y, "#".parse::<char>().unwrap());
+                    let change = Change::new(x, y, '#');
                     seats_to_be_changed.push(change);
                     changed += 1;
                 }
-            } else if *seat == "#".parse::<char>().unwrap() {
+            } else if *seat == '#' {
                 let mut occupied_adjacents = 0;
                 for i in -1i64..=1 {
                     for p in -1i64..=1 {
@@ -119,13 +119,13 @@ fn run_round(input_seats: Vec<Vec<char>>) -> (Vec<Vec<char>>, u32) {
                         }
 
                         let seat_check = &seats[(y + i) as usize][(x + p) as usize];
-                        if *seat_check == "#".parse::<char>().unwrap() {
+                        if *seat_check == '#' {
                             occupied_adjacents += 1;
                         }
                     }
                 }
                 if occupied_adjacents >= 4 {
-                    let change = Change::new(x, y, "L".parse::<char>().unwrap());
+                    let change = Change::new(x, y, 'L');
                     seats_to_be_changed.push(change);
                     changed += 1;
                 }
@@ -150,9 +150,9 @@ fn run_round_with_vision(input_seats: Vec<Vec<char>>) -> (Vec<Vec<char>>, u32) {
     for y in 0i64..seats.len() as i64 {
         for x in 0i64..seats[y as usize].len() as i64 {
             let seat = &seats[y as usize][x as usize];
-            if *seat == ".".parse::<char>().unwrap() {
+            if *seat == '.' {
                 continue;
-            } else if *seat == "L".parse::<char>().unwrap() {
+            } else if *seat == 'L' {
                 let mut next_to_occupied: bool = false;
                 for i in -1i64..=1 {
                     for p in -1i64..=1 {
@@ -160,17 +160,17 @@ fn run_round_with_vision(input_seats: Vec<Vec<char>>) -> (Vec<Vec<char>>, u32) {
                             continue;
                         }
                         let seat_check = see_direction(Coordinate::new(x, y), (&seats).to_owned(), p, i);
-                        if seat_check == "#".parse::<char>().unwrap() {
+                        if seat_check == '#' {
                             next_to_occupied = true;
                         }
                     }
                 }
                 if !next_to_occupied {
-                    let change = Change::new(x, y, "#".parse::<char>().unwrap());
+                    let change = Change::new(x, y, '#');
                     seats_to_be_changed.push(change);
                     changed += 1;
                 }
-            } else if *seat == "#".parse::<char>().unwrap() {
+            } else if *seat == '#' {
                 let mut occupied_adjacents = 0;
                 for i in -1i64..=1 {
                     for p in -1i64..=1 {
@@ -178,13 +178,13 @@ fn run_round_with_vision(input_seats: Vec<Vec<char>>) -> (Vec<Vec<char>>, u32) {
                             continue;
                         }
                         let seat_check = see_direction(Coordinate::new(x, y), (&seats).to_owned(), p, i);
-                        if seat_check == "#".parse::<char>().unwrap() {
+                        if seat_check == '#' {
                             occupied_adjacents += 1;
                         }
                     }
                 }
                 if occupied_adjacents >= 5 {
-                    let change = Change::new(x, y, "L".parse::<char>().unwrap());
+                    let change = Change::new(x, y, 'L');
                     seats_to_be_changed.push(change);
                     changed += 1;
                 }
