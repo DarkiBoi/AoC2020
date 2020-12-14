@@ -58,6 +58,11 @@ path = "src/bin/aoc/day12.rs"
 name = "day13"
 path = "src/bin/aoc/day13.rs"
 
+[[bin]]
+name = "day14"
+path = "src/bin/aoc/day14.rs"
+
 
 [dependencies]
 regex = "1"
+linked-hash-map = "0.5.3"
