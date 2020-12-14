@@ -195,96 +195,53 @@ pub fn part_two() {
             // Memory Address Mask Bit Shit
 
             let address_bits: Vec<char> = format!("{:b}", mem_addr.address).chars().collect();
-            let mut address_value: Vec<u8> = vec!(0 as u8; 36);
-            for i in 0..address_value.len() {
-                if i >= address_value.len() - address_bits.len() {
-                    match address_bits[i - (address_value.len() - address_bits.len())] {
-                        '1' => address_value[i] = 1 as u8,
-                        '0' => address_value[i] = 0 as u8,
-                        _ => {}
-                    }
+            let mut address_value: String = String::with_capacity(36);
+            for i in 0..address_value.capacity() {
+                if i >= address_value.capacity() - address_bits.len() {
+                    address_value.push(address_bits[i - (address_value.capacity() - address_bits.len())]);
+                } else {
+                    address_value.push('0');
                 }
             }
 
-            let mut output_address: [u8; 36] = [0; 36];
+            println!("{}", address_value);
 
-            let mut floating_count = 0;
+            let mut output_address: String = String::with_capacity(36);
 
-            for (index, bit) in address_value.iter().enumerate() {
+            let mut floating_count: i32 = 0;
+
+            for (index, bit) in address_value.chars().into_iter().enumerate() {
                 match *mask.get(index).unwrap() {
                     0 => {
-                        output_address[index] = *bit;
+                        output_address.push(bit);
                     }
                     1 => {
-                        output_address[index] = 1;
+                        output_address.push('1');
                     }
                     2 => {
-                        output_address[index] = 2;
+                        output_address.push('0');
                         floating_count += 1;
                     }
                     _ => {}
                 }
             }
 
-            let mut addresses: Vec<Vec<char>> = Vec::new();
+            let mut masked_address: u64 = u64::from_str_radix(output_address.as_str(), 2).unwrap();
 
-            let mut address_chars: Vec<char> = Vec::new();
+            let mut addresses: Vec<u64> = Vec::new();
 
-            let mut floating_increment: u64 = 0;
-            let mut floating_bits: Vec<u8> = vec![0; floating_count];
+            let mut floating_decimal: u64 = 0;
 
-            for _i in 0..floating_count.pow(2) {
-                let mut floating_index = 0;
-                for p in 0..output_address.len() {
-                    let byte = output_address[p];
-                    match byte {
-                        0u8 => {
-                            address_chars.push('0');
-                        }
-                        1u8 => {
-                            address_chars.push('1');
-                        }
-                        2u8 => {
-                            let bit = floating_bits[floating_index];
-                            if bit == 1u8 {
-                                address_chars.push('1');
-                            } else if bit == 0u8 {
-                                address_chars.push('0');
-                            }
-                            floating_index += 1;
-                        }
-                        _ => {}
-                    }
-                }
-                floating_increment += 0b1;
-                let bits = format!("{:b}", floating_increment);
-                for i in 0..floating_count {
-                    if bits.len() > floating_count {
-                        break;
-                    }
-                    if i >= floating_count - bits.len() {
-                        match bits.as_bytes()[i - (floating_bits.len() - bits.len())] as char {
-                            '1' => {
-                                floating_bits[i] = 1;
-                            }
-                            '0' => {
-                                floating_bits[i] = 0;
-                            }
-                            _ => {}
-                        }
-                    }
-                }
-                addresses.push(address_chars);
-                address_chars = Vec::new();
+            for i in 0..floating_count.pow(2) {
+                let address = masked_address | floating_decimal;
+                addresses.push(address);
+                println!("{}", address);
+                println!("{:b}", address);
+                floating_decimal += 0b1;
             }
 
-
             for address in addresses {
-                let address_string: String = address.iter().collect();
-
-                let result_address = u64::from_str_radix(address_string.as_str(), 2).unwrap();
-
-                memory.insert(result_address, result_value);
+                memory.insert(address, result_value);
             }
         }
     }
